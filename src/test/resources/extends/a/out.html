@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="/assets/result/result.css">
+    <link rel="stylesheet" href="/assets/nav/nav.css">
+    <link rel="stylesheet" href="/assets/footer/footer.css">
+
+</head>
+
+<body>
+
+<main class="results">
+
+    <include file="../nav/nav.html"></include>
+
+    <section class="results__content">
+
+        <div class="mobile">
+            <h1 class="mobile__label">Modify your search</h1>
+            <span class="mobile__icon fa fa-chevron-right" (click)="showMobileLocations=true" *ngIf="!showMobileLocations"></span>
+            <span class="mobile__icon fa fa-chevron-left" (click)="showMobileLocations=false" *ngIf="showMobileLocations"></span>
+        </div>
+
+        <div class="results__items" [class.results__items--mobile]="showMobileLocations">
+
+            <div class="results__search">
+                <div class="results__parameters">
+                    <span>Near: </span><strong>"{{near}}"</strong>
+                </div>
+                <div class="results__parameters">
+                    <span>Search: </span><strong>"{{query}}"</strong>
+                </div>
+            </div>
+
+            <div class="locations" [class.locations--mobile]="showMobileLocations">
+                <for item="location" items="locations">
+                    <div class="location" [class.location--active]="location.active" (click)="test()">
+                        <div class="location__left">
+                            <h1 class="location__name">{{location.name}}</h1>
+                            <div class="location__address">{{location.formatted_address}}</div>
+                            <div class="location__control">
+                                <a class="results__button results__button--direction" href="https://maps.google.com/maps?daddr={{location.lat}},{{location.lng}}&saddr={{currentMarker.getPosition().lat()}},{{currentMarker.getPosition().lng()}}" title="Plan your route to this location" target="_blank">Get Directions</a>
+                                <a class="results__button results__button--view" (click)="activatePanoramaView(location)">View Location</a>
+                            </div>
+                        </div>
+                        <div class="location__right">
+                            <p class="location__distance">{{location.distance}}</p>
+                            <p class="location__rating" *ngIf="location.rating">Rating: <strong>{{location.rating}}/5</strong></p>
+                            <p class="location__times" *ngIf="location.openNow">Opened now</p>
+                        </div>
+                    </div>
+                </for>
+            </div>
+
+        </div>
+
+        <div class="map" [class.map--mobile]="!showMobileLocations">
+            <div class="map__google"></div>
+            <div class="map__location" *ngIf="infobox">
+                <div class="map__infos">
+                    <h1 class="map__name">{{infobox.name}}</h1>
+                    <p class="map__address">{{infobox.formatted_address}}</p>
+                </div>
+                <div class="map__controls">
+                    <a class="map__button map__button--direction" href="https://maps.google.com/maps?daddr={{infobox.lat}},{{infobox.lng}}&saddr={{currentMarker.getPosition().lat()}},{{currentMarker.getPosition().lng()}}" title="Plan your route to this location" target="_blank">Get Directions</a>
+                    <a class="map__button map__button--view" (click)="activatePanoramaView(infobox)">View Location</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <include file="../footer/footer.html"></include>
+
+</main>
+<script src="/assets/result/result.js"></script>
+
+</body>
+
+</html>
