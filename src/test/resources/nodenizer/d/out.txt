@@ -1,0 +1,5 @@
+ELEMENT: a
+	ATTRIBUTE: href, asd
+	ATTRIBUTE: target, _blank
+	ELEMENT: a
+		ATTRIBUTE: href, qwe

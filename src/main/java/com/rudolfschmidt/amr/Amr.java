@@ -1,19 +1,23 @@
 package com.rudolfschmidt.amr;
 
 import com.rudolfschmidt.amr.model.Model;
+import com.rudolfschmidt.amr.nodenizer.Node;
+import com.rudolfschmidt.amr.tokenizer.Token;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Deque;
+import java.util.List;
 
-import static com.rudolfschmidt.amr.consumers.ExtendsConsumer.handleExtends;
-import static com.rudolfschmidt.amr.consumers.IfConsumer.handleIf;
-import static com.rudolfschmidt.amr.consumers.IncludeConsumer.handleInclude;
-import static com.rudolfschmidt.amr.consumers.IterationConsumer.handleIteration;
-import static com.rudolfschmidt.amr.consumers.ModelConsumer.handleModel;
-import static com.rudolfschmidt.amr.formatter.Formatter.format;
-import static com.rudolfschmidt.amr.formatter.Formatter.formatPretty;
+import static com.rudolfschmidt.amr.compiler.Compiler.compile;
+import static com.rudolfschmidt.amr.consumers.Conditioner.applyConditioner;
+import static com.rudolfschmidt.amr.consumers.Extender.applyExtender;
+import static com.rudolfschmidt.amr.consumers.Includer.applyIncluder;
+import static com.rudolfschmidt.amr.consumers.Iterator.applyIterator;
+import static com.rudolfschmidt.amr.consumers.Modelizer.applyModelizer;
+import static com.rudolfschmidt.amr.nodenizer.Nodenizer.nodenize;
+import static com.rudolfschmidt.amr.tokenizer.Tokenizer.tokenize;
 
 
 public class Amr {
@@ -29,34 +33,49 @@ public class Amr {
 		this.prettyFormat = prettyFormat;
 	}
 
+	public static List<Node> parse(Path templatePath) throws IOException {
+
+		final List<Token> tokens = tokenize(templatePath);
+
+		List<Node> nodes;
+		nodes = nodenize(tokens);
+		nodes = applyExtender(templatePath, nodes);
+		nodes = applyIncluder(templatePath, nodes);
+
+		return nodes;
+
+	}
+
+	public static List<Node> parse(Path templatePath, Model model) throws IOException {
+
+		List<Node> nodes;
+		nodes = parse(templatePath);
+		nodes = parse(nodes, model);
+
+		return nodes;
+
+	}
+
+	public static List<Node> parse(List<Node> nodes, Model model) {
+
+		nodes = applyIterator(nodes, model);
+		nodes = applyConditioner(nodes, model);
+		nodes = applyModelizer(nodes, model);
+
+		return nodes;
+
+	}
+
 	public String render(String templateFile) throws IOException {
-		final String html = parse(Paths.get(templatesDirectory, templateFile));
-		return prettyFormat ? formatPretty(html) : format(html);
+
+		return compile(parse(Paths.get(templatesDirectory, templateFile)), prettyFormat);
+
 	}
 
 	public String render(String templateFile, Model model) throws IOException {
-		String html = parse(Paths.get(templatesDirectory, templateFile));
-		html = renderModel(html, model);
-		return prettyFormat ? formatPretty(html) : format(html);
-	}
 
-	public static String renderModel(String html, Model model) {
-		html = handleIteration(html, model);
-		html = handleIf(html, model);
-		html = handleModel(html, model);
-		return html;
-	}
-
-	public static String parse(Path templatePath) throws IOException {
-
-		String html = new String(Files.readAllBytes(templatePath));
-
-		html = handleExtends(html, templatePath);
-		html = handleInclude(html, templatePath);
-
-		return html;
+		return compile(parse(Paths.get(templatesDirectory, templateFile), model), prettyFormat);
 
 	}
-
 
 }

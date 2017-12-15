@@ -11,8 +11,8 @@ public class Model {
 		return new Model();
 	}
 
-	public static Model model(String key, String value) {
-		return new Model().add(key, value);
+	public static Model model(String key, Object value) {
+		return model().add(key, value);
 	}
 
 	public Model add(String key, Object value) {

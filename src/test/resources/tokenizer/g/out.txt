@@ -1,0 +1,9 @@
+ELEMENT_START: link
+ATTRIBUTE_KEY: rel
+ATTRIBUTE_VALUE: stylesheet
+ATTRIBUTE_KEY: href
+ATTRIBUTE_VALUE: https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css
+ATTRIBUTE_KEY: integrity
+ATTRIBUTE_VALUE: sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb
+ATTRIBUTE_KEY: crossorigin
+ATTRIBUTE_VALUE: anonymous

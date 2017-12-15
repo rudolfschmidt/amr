@@ -1,0 +1,18 @@
+ELEMENT: extends
+	ATTRIBUTE: file, root.html
+	ELEMENT: block
+		ATTRIBUTE: name, styles
+		ELEMENT: link
+			ATTRIBUTE: rel, stylesheet
+			ATTRIBUTE: href, /b.css
+		ELEMENT: link
+			ATTRIBUTE: rel, stylesheet
+			ATTRIBUTE: href, /c.css
+	ELEMENT: block
+		ATTRIBUTE: name, scripts
+		ELEMENT: script
+			ATTRIBUTE: src, /foo.js
+	ELEMENT: block
+		ATTRIBUTE: name, body
+		ELEMENT: h1
+			TEXT: foo

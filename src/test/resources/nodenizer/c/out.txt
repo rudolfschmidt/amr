@@ -1,0 +1,4 @@
+ELEMENT: a
+	ATTRIBUTE: href, qwe
+	ATTRIBUTE: target, _blank
+	TEXT: asd
